@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "764267945371",
+    "project_id": "gludtest-30ee3",
+    "storage_bucket": "gludtest-30ee3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764267945371:android:f8222ec05f04cca3ba553e",
+        "android_client_info": {
+          "package_name": "com.example.glud_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764267945371-eolarimnvqd3bc32gqi4ijbd15b6196q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDgLNwOBs-KIXBCpnOErpEraVsBmgXoEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764267945371-eolarimnvqd3bc32gqi4ijbd15b6196q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
