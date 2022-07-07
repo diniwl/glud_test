@@ -1,6 +1,6 @@
 # glud_test
 
-A new Flutter project.
+For PIMNASKES with enhanced features and iOS compatibility.
 
 ## Getting Started
 
