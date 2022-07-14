@@ -40,7 +40,7 @@ class _GludTestState extends State<GludTest> {
       theme: ThemeData(
         primaryColor: Color(0xff273248),
       ),
-      home: LoginPage(),
+      home: BottomNavi(),
     );
   }
 }

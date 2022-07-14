@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   String _status = '?', _steps = '?';
 
   //firebase auth
+  final CollectionReference users = FirebaseFirestore.instance.collection("users");
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
