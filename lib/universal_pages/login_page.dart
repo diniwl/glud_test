@@ -16,9 +16,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _email = new TextEditingController();
-  final _password = new TextEditingController();
-  final _username = new TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _username = TextEditingController();
 
   static const String keyEmail = "prefKeyEmail";
   static const String keyPassword = "prefKeyPassword";
