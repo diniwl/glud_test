@@ -52,6 +52,7 @@ dependencies:
   charts_flutter: ^0.12.0
   datetime_picker_formfield: ^2.0.0
   fl_chart: ^0.55.0
+  intl: ^0.17.0
   
   
 
@@ -106,11 +107,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+     - family: SpaceGrotesk
+       fonts:
+         - asset: assets/fonts/SpaceGrotesk-Regular.ttf
+         - asset: assets/fonts/SpaceGrotesk-Bold.ttf
+         - asset: assets/fonts/SpaceGrotesk-Light.ttf
+         - asset: assets/fonts/SpaceGrotesk-Medium.ttf
+         - asset: assets/fonts/SpaceGrotesk-SemiBold.ttf
+           weight: 700
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

@@ -39,6 +39,8 @@ class _GludTestState extends State<GludTest> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color(0xff273248),
+        accentColor: Color(0xffFFA364),
+        fontFamily: 'SpaceGrotesk',
       ),
       home: BottomNavi(),
     );

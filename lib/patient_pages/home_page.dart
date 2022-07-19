@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   UserModel loggedInUser = UserModel();
 
   //realtime database for glucose level and insulin
-  String _displayText = 'Values go here';
+  var _displayText = 'Values go here';
   String _displayCount = 'Intake goes here';
   final _database = FirebaseDatabase.instance.ref();
   int _counter = 0;
@@ -79,13 +79,13 @@ class _HomePageState extends State<HomePage> {
     _database.child('guladarah').onValue.listen((event) {
       final Object? guladarah = event.snapshot.value;
       setState(() {
-        _displayText = 'Kadar gula darah: $guladarah';
+        _displayText = '$guladarah';
       });
     });
     _database.child('insulin').onValue.listen((event) {
       final Object? insulin = event.snapshot.value;
       setState(() {
-        _displayCount = 'Insulin intake: $insulin';
+        _displayCount = '$insulin';
       });
     });
   } 
@@ -168,15 +168,20 @@ class _HomePageState extends State<HomePage> {
             children: [
               //glucometer
               Container(
-                height: 100,
-                width: 500,
-                child: Text(
-                  _displayText + ' mg/dL',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 40,
+                height: 300,
+                width: 350,
+                child: Card(
+                  color: Theme.of(context).accentColor,
+                  elevation: 4,
+                  child: Center(
+                    child: Text(
+                      (_displayText) + ' mg/dL',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 40,
+                      ),
+                    ),
                   ),
                 ),
               ),
