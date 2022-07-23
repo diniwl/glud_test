@@ -100,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 bottomLeft: 
                 sendByMe ? Radius.circular(24) : Radius.circular(0),
               ),
-              color: sendByMe ? Colors.blue : Colors.orange,
+              color: sendByMe ? Color(0xff6A7DA1) : Colors.orange,
             ),
             padding: EdgeInsets.all(16),
             child: Text(message,
@@ -148,6 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff556D9D),
         title: Text(widget.fullName),
       ),
       body: Container(
@@ -158,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: Colors.black.withOpacity(0.8),
+                color: Color(0xff556D9D),
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [

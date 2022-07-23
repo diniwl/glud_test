@@ -33,7 +33,10 @@ class _BottomNaviState extends State<BottomNavi> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.orange,
+        elevation: 0,
         iconSize: 30,
         items: [
           //urutannya harus sama di urutan list final tabs

@@ -27,6 +27,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   //current date
   String formattedDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
 
@@ -34,11 +35,14 @@ class _HomePageState extends State<HomePage> {
   //store to firestore
   var glucose = '';
   var steps = '';
-  
+
+  bool notifClick = true;
 
   //pedometer
   late Stream<StepCount> _stepCountStream;
-  String _steps = '0';
+  int _steps = 0;
+  double _distance = 0;
+  double _calories = 0;
 
   //firebase auth
   final CollectionReference users =
@@ -51,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   String _displayCount = '0';
   final _database = FirebaseDatabase.instance.ref();
   int _counter = 0;
+
 
   @override
   //insulin counter
@@ -95,14 +100,16 @@ class _HomePageState extends State<HomePage> {
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
-      _steps = event.steps.toString();
+      _steps = event.steps;
+      _distance = _steps/1312;
+      _calories = _steps*0.04;
     });
   }
 
   void onStepCountError(error) {
     print('onStepCountError: $error');
     setState(() {
-      _steps = '0';
+      _steps = 0;
     });
   }
 
@@ -238,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                         width: 20,
                       ),
                       Text(
-                        _steps,
+                        _steps.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -255,8 +262,8 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        '0 Km',
+                      Text(_distance.toString() +
+                        ' Km',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
@@ -268,8 +275,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Icon(Octicons.flame, size: 20),
                       SizedBox(width: 10),
-                      Text(
-                        '0 cal',
+                      Text(_calories.toString() +
+                        ' Cal',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
@@ -343,9 +350,13 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           //yang belom
                           IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.notifications_active_rounded,
+                              onPressed: () {
+                                setState(() {
+                                  notifClick = !notifClick;
+                                });
+                              },
+                              icon: Icon((notifClick == false)?
+                                Icons.notifications_active_rounded : Icons.notifications_off_rounded,
                               )),
 
                           IconButton(
