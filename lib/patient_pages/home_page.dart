@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,9 @@ import 'package:glud_test/universal_pages/login_page.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:fluttericon/octicons_icons.dart';
+import 'package:intl/intl.dart';
 
 String formatDate(DateTime d) {
   return d.toString().substring(0, 19);
@@ -15,80 +17,79 @@ String formatDate(DateTime d) {
 
 class HomePage extends StatefulWidget {
   final String? payload;
-  const HomePage({ Key? key,
-  required this. payload,
+  const HomePage({
+    Key? key,
+    required this.payload,
   }) : super(key: key);
-  
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  //current date
+  String formattedDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
 
   static const String keyInsulin = "prefKeyInsulin";
   //store to firestore
   var glucose = '';
   var steps = '';
+  
 
   //pedometer
   late Stream<StepCount> _stepCountStream;
-  late Stream<PedestrianStatus> _pedestrianStatusStream;
-  String _status = '?', _steps = '?';
+  String _steps = '0';
 
   //firebase auth
-  final CollectionReference users = FirebaseFirestore.instance.collection("users");
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection("users");
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
   //realtime database for glucose level and insulin
-  var _displayText = 'Values go here';
-  String _displayCount = 'Intake goes here';
+  String _displayText = '0';
+  String _displayCount = '0';
   final _database = FirebaseDatabase.instance.ref();
   int _counter = 0;
 
   @override
   //insulin counter
-  void incrementCount(){
+  void incrementCount() {
     setState(() {
       _counter++;
     });
   }
 
-  //displaying firestore user data 
   void initState() {
+    //fetching user fullname
     super.initState();
-
-    //fetching user's full name
     FirebaseFirestore.instance
-    .collection("users")
-    .doc(user?.uid)
-    .get()
-    .then((value) {
+        .collection("users")
+        .doc(user?.uid)
+        .get()
+        .then((value) {
       this.loggedInUser = UserModel.fromMap(value.data());
-      setState(() {
-      });
+      setState(() {});
     });
-    //for displaying real-time glucose level
-     super.initState();
     initPlatformState();
-    _activateListeners();   
+    _activateListeners();
   }
 
-  //displaying realtime database 
-   void _activateListeners() {
+  //displaying realtime database
+  void _activateListeners() {
     _database.child('guladarah').onValue.listen((event) {
       final Object? guladarah = event.snapshot.value;
       setState(() {
         _displayText = '$guladarah';
       });
     });
-    _database.child('insulin').onValue.listen((event) {
+    _database.child('insulin/insulin').onValue.listen((event) {
       final Object? insulin = event.snapshot.value;
       setState(() {
         _displayCount = '$insulin';
       });
     });
-  } 
+  }
 
   //pedometer
   void onStepCount(StepCount event) {
@@ -98,34 +99,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void onPedestrianStatusChanged(PedestrianStatus event) {
-    print(event);
-    setState(() {
-      _status = event.status;
-    });
-  }
-
-  void onPedestrianStatusError(error) {
-    print('onPedestrianStatusError: $error');
-    setState(() {
-      _status = 'Pedestrian Status not available';
-    });
-    print(_status);
-  }
-
   void onStepCountError(error) {
     print('onStepCountError: $error');
     setState(() {
-      _steps = 'Step Count not available';
+      _steps = '0';
     });
   }
 
   void initPlatformState() {
-    _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-    _pedestrianStatusStream
-        .listen(onPedestrianStatusChanged)
-        .onError(onPedestrianStatusError);
-
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(onStepCount).onError(onStepCountError);
 
@@ -139,149 +120,266 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color(0xff273248),
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white
-        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(onPressed: (){
-                logout(context);
-              }, icon: Icon(Icons.exit_to_app_rounded, size: 30,)),
-            ],
-          )
-        ],
-        title: Text("Hello! ${loggedInUser.fullName}",
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          color: Color(0xffFC7643),
-          fontSize: 25,
-          fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //glucometer
-              Container(
-                height: 300,
-                width: 350,
-                child: Card(
-                  color: Theme.of(context).accentColor,
-                  elevation: 4,
-                  child: Center(
-                    child: Text(
-                      (_displayText) + ' mg/dL',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 40,
-                      ),
-                    ),
+              TextButton(
+                onPressed: () {
+                  logout(context);
+                },
+                child: Text(
+                  'Log out',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-        
-              //insulin
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xffFFA364),                  
-                      ),
-                      height: 50,
-                      width: 250,
-                      child: Directionality(textDirection: TextDirection.ltr, 
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(primary: Color(0xffFFA364)),
-                        onPressed: () async {
-                          try{
-                            await insulinRef.update({'insulin': _counter++});
-                            SharedPreferences pref = await SharedPreferences.getInstance();
-                            pref.setString(keyInsulin, _displayCount);
-                            print("The insulin value has been written");
-                          } catch(e) {
-                            print('Insulin intake error! $e');
-                          }
-                        }, 
-                        icon: Icon(Icons.plus_one_rounded,
-                        size: 30,), 
-                        label: Text(
-                          _displayCount,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xff273248),
-                          ),
-                          textAlign: TextAlign.center,
-                        ))),
-                    ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor:  MaterialStateProperty.all(Color(0xffFFA364)),
-                      ),
-                      onPressed: () {
-                        NotificationApi.showScheduledNotification(
-                          title: "Insulin Reminder",
-                          body: "Don't forget to take your recommended daily dose of insulin!",
-                          scheduledDate: DateTime.now().add(Duration(hours: 6))
-                          );
-                      }, 
-                      icon: Icon(Icons.notifications_active_rounded,
-                      size: 30), 
-                      label: Text('')),
-                  )
-                ],  
+            ],
+          )
+        ],
+        title: Text("Hello, ${loggedInUser.fullName}",
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 20,
+            )),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+
+            Text(
+              formattedDate,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
               ),
-              SizedBox(height: 20,),
-              //pedometer
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+            ),
+
+            SizedBox(
+              height: 30,
+            ),
+
+            //glucometer
+            Center(
+              child: CircularPercentIndicator(
+                radius: 110,
+                lineWidth: 13,
+                animation: true,
+                percent: double.parse(_displayText) * 0.0025,
+                center: Column(
+                  children: [
+                    SizedBox(height: 70),
+                    Text(
+                      (_displayText),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text('mg/dL',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                        ))
+                  ],
+                ),
+                circularStrokeCap: CircularStrokeCap.round,
+                backgroundColor: Color(0xff556D9D),
+                linearGradient: LinearGradient(colors: [
+                  Color(0xfffff6c0),
+                  Color(0xfffeba00),
+                  Colors.redAccent,
+                ]),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+
+            //pedometer
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              elevation: 5,
+              child: ClipPath(
+                clipper: ShapeBorderClipper(
+                    shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                )),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xffFFA364),
-                  ),
-                  height: 50,
+                  height: 75,
                   width: 350,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                    Color(0xff6A7DA1),
+                    Color(0xff556D9D),
+                    Color(0xff334974),
+                  ])),
+                  child: Row(
                     children: [
-                      Text(
-                        'Steps taken: ',
-                        style: TextStyle(fontSize: 18,
-                        color: Color(0xff273248),
-                        fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(
+                        Icons.directions_walk_rounded,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
                       Text(
                         _steps,
-                        style: TextStyle(fontSize: 18,
-                        color: Color(0xff273248),
-                        fontWeight: FontWeight.bold)),                   
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(
+                        Icons.add_road_rounded,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '0 Km',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(Octicons.flame, size: 20),
+                      SizedBox(width: 10),
+                      Text(
+                        '0 cal',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
-        
-            ],
-          ),
+            ),
+
+            SizedBox(
+              height: 20,
+            ),
+
+            //insulin reminder
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              elevation: 5,
+              child: ClipPath(
+                clipper: ShapeBorderClipper(
+                    shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                )),
+                child: Container(
+                  height: 100,
+                  width: 350,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                    Color(0xff6A7DA1),
+                    Color(0xff556D9D),
+                    Color(0xff334974)
+                  ])),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.medication_rounded,
+                        size: 40,
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Insulin',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 23,
+                          ),
+                          Text(
+                            _displayCount,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          //yang belom
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.notifications_active_rounded,
+                              )),
+
+                          IconButton(
+                              onPressed: () async {
+                                try {
+                                  await insulinRef
+                                      .update({'insulin': _counter++});
+                                  SharedPreferences pref =
+                                      await SharedPreferences.getInstance();
+                                  print('The insulin value has been updated');
+                                } catch (e) {
+                                  print('Insulin intake error $e');
+                                }
+                              },
+                              icon: Icon(
+                                Icons.plus_one_rounded,
+                              ))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      
     );
   }
 
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
   }
