@@ -185,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     SizedBox(height: 70),
                     Text(
-                      (_displayText),
+                      _displayText.substring(0, 5),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
@@ -262,8 +262,8 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(_distance.toString() +
-                        ' Km',
+                      Text(_distance.toStringAsFixed(1) +
+                        ' Km', 
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Icon(Octicons.flame, size: 20),
                       SizedBox(width: 10),
-                      Text(_calories.toString() +
+                      Text(_calories.toStringAsFixed(1) +
                         ' Cal',
                         style: TextStyle(
                           fontSize: 20,
