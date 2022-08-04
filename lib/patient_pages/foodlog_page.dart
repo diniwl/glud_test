@@ -1,172 +1,231 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import './food_chart.dart';
-import './food.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FoodLog extends StatefulWidget {
   const FoodLog({Key? key}) : super(key: key);
-
   @override
   State<FoodLog> createState() => _FoodLogState();
 }
 
 class _FoodLogState extends State<FoodLog> {
-  final List<Food> food = [];
-
-  final List<Food> recentFood = [];
-
-  //String? foodInput;
-  //String? caloryInput;
-  final foodController = TextEditingController();
-  final caloryController = TextEditingController();
-
-  void submitData() {
-    final enteredFood = foodController.text;
-    final enteredCalory = double.parse(caloryController.text);
-
-    if (enteredFood.isEmpty || enteredCalory <= 0) {
-      return;
-    }
-
-    addNewFood(enteredFood, enteredCalory);
-  }
-
-  void addNewFood(String meal, double calory) {
-    final newMeal = Food(
-        id: DateTime.now().toString(),
-        title: meal,
-        calory: calory,
-        date: DateTime.now());
-
-    setState(() {
-      food.add(newMeal);
-    });
-  }
+  late List<CalData> _chartData;
+  late TooltipBehavior _tooltipBehavior;
+  final List<String> mealTime = <String> ['Breakfast', 'Lunch', 'Dinner'];
 
   @override
+  void initState() {
+    _chartData = getChartData();
+    _tooltipBehavior = TooltipBehavior(enable: true);
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
+
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 100,
-            ),
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Color(0xffFC7643),
-                child: Text('Chart'),
-                elevation: 3,
-              ),
-            ),
-            Card(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Foods'),
-                      controller: foodController,
-                      //onChanged: (val) {
-                      //foodInput = val;
-                      //},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Calories'),
-                      controller: caloryController,
-                      keyboardType: TextInputType.number,
-                      onSubmitted: (_) => submitData,
-                      //onChanged: (val) {
-                      //caloryInput = val;
-                      // },
-                    ),
-                    TextButton(
-                        onPressed: submitData,
-                        child: Text('Submit Log'),
-                        style: TextButton.styleFrom(
-                          primary: Colors.orange,
-                        ))
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              height: 300,
-              child: food.isEmpty
-                  ? Column(
-                      children: [
-                        SizedBox(height: 80),
-                        Text('No meals added yet!',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.white)),
-                        SizedBox(height: 10),
-                        Container(
-                            height: 100,
-                            width: 100,
-                            child: Image.asset(
-                              'assets/images/hungry.png',
-                              fit: BoxFit.cover,
-                            )),
-                      ],
+      backgroundColor: Color(0xff273248),
+      body: Center(
+          child: Column(
+        children: [
+          Card(
+            child: Container(
+              height: 350,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Color(0xff6A7DA1),
+                Color(0xff556D9D),
+                Color(0xff334974),
+              ])),
+              child: SfCircularChart(
+                annotations: [
+                  CircularChartAnnotation(
+                    widget: Container(
+                      child: Text('1200\nCal', 
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),),
                     )
-                  : ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: Row(
+                  )
+                ],
+                palette: <Color>[
+                  Color(0xff4D77FF),
+                  Color(0xff00D7FF),
+                  Color(0xff0096FF)
+                ],
+                title: ChartTitle(
+                  text: 'Calories Tracked\n\n' + formattedDate,
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'SpaceGrotesk',
+                    fontSize: 16,
+                  ),
+                ),
+                legend: Legend(
+                    isVisible: true,
+                    overflowMode: LegendItemOverflowMode.wrap,
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'SpaceGrotesk',
+                        fontSize: 16)),
+                tooltipBehavior: _tooltipBehavior,
+                series: <CircularSeries>[
+                  DoughnutSeries<CalData, String>(
+                    dataSource: _chartData,
+                    xValueMapper: (CalData data, _) => data.nutrients,
+                    yValueMapper: (CalData data, _) => data.calories,
+                    dataLabelSettings: DataLabelSettings(
+                        isVisible: true,
+                        textStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'SpaceGrotesk',
+                          color: Colors.white,
+                        )),
+                    enableTooltip: true,
+                  )
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              height: 150,
+              child: ListView(
+                children: [
+                  Card(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Color(0xff6A7DA1),
+                          Color(0xff556D9D),
+                          Color(0xff334974),
+                        ]
+                        )
+                      ),
+                      height: 75,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Color(0xffFC7643),
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  food[index].calory.toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Color(0xffFC7643)),
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    food[index].title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22,
-                                      color: Color(0xffFC7643),
-                                    ),
-                                  ),
-                                  Text(
-                                    DateFormat().format(food[index].date),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              )
+                              SizedBox(height: 15),
+                              Text('Breakfast',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),),
+                              Text('Nasi, Telur dadar',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),),
                             ],
                           ),
-                        );
-                      },
-                      itemCount: food.length,
+                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
+                        ],
+                      ),
                     ),
+                  ),
+                  Card(
+                    child: Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Color(0xff6A7DA1),
+                          Color(0xff556D9D),
+                          Color(0xff334974),
+                        ]
+                        )
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+                              Text('Lunch',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),),
+                              Text('Nasi, Opor ayam',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),),
+                            ],
+                          ),
+                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      height: 75,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Color(0xff6A7DA1),
+                          Color(0xff556D9D),
+                          Color(0xff334974),
+                        ]
+                        )
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+                              Text('Dinner',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),),
+                              Text('Nasi, Sayur sop',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),),
+                            ],
+                          ),
+                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]
+              ),
             ),
-          ],
-        ),
+          )
+        ],
+      )
       ),
     );
   }
+
+  List<CalData> getChartData() {
+    final List<CalData> chartData = [
+      CalData('Proteins', 180),
+      CalData('Carbs', 220),
+      CalData('Fats', 120),
+    ];
+    return chartData;
+  }
+}
+
+class CalData {
+  CalData(this.nutrients, this.calories);
+  final String nutrients;
+  final int calories;
 }

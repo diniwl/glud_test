@@ -35,7 +35,6 @@ class _ChatScreenState extends State<ChatScreen> {
     myEmail = pref.getString(keyEmail).toString();
     setState(() {
     });
-    Fluttertoast.showToast(msg: "Shared pref data fecthed");
     print('$myUserName');
     print('$myEmail');
 
@@ -83,7 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget chatMessageTile(String message, bool sendByMe) {
+  Widget chatMessageTile(String message, bool sendByMe,) {
     return Row(
       mainAxisAlignment: 
           sendByMe ? MainAxisAlignment.end : MainAxisAlignment.start,

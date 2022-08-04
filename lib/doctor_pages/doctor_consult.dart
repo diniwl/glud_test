@@ -59,16 +59,44 @@ class _DoctorConsultState extends State<DoctorConsult> {
         DatabaseMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
         Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username, name)));
       },
-      child: Row(
-        children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        child: Row(
           children: [
-          Text(name),
-          Text(email),
-        ],)
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: ClipPath(
+              clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              )),
+              child: Container(
+                padding: EdgeInsets.only(left: 15),
+                height: 50,
+                width: 350,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                        Color(0xff6A7DA1),
+                        Color(0xff556D9D),
+                        Color(0xff334974)                    
+                  ])
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  SizedBox(height: 5),
+                  Text(name, style: TextStyle(
+                    color: Colors.white,
+                  ),),
+                  Text(email, style: TextStyle(
+                    color: Colors.white,
+                  )),
+                  SizedBox(height: 5,)
+                ],),
+              ),
+            ),
+          )
     
-      ],),
+        ],),
+      ),
     );
   }
 
@@ -144,7 +172,8 @@ class _DoctorConsultState extends State<DoctorConsult> {
                   },
                   child: Padding(
                     padding: EdgeInsets.only(right: 12),
-                    child: Icon(Icons.arrow_back)),  
+                    child: Icon(Icons.arrow_back, 
+                    color: Colors.white,)),  
                 )
                 : Container(),
               Expanded(
@@ -182,7 +211,6 @@ class _DoctorConsultState extends State<DoctorConsult> {
               ],
             ),
             isSearching ? Container(
-              color: Colors.white,
               child: searchUsersList()): 
                 chatRoomList()
           ],
@@ -227,23 +255,46 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
             MaterialPageRoute(
                 builder: (context) => ChatScreen(username, name)));
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 5,
+        child: ClipPath(
+          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          )),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                        Color(0xff6A7DA1),
+                        Color(0xff556D9D),
+                        Color(0xff334974)
+              ])
+            ),
+            child: Row(
               children: [
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 3),
-                Text(widget.lastMessage)
+                SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Text(
+                      name,
+                      style: TextStyle(fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange),
+                    ),
+                    SizedBox(height: 10),
+                    Text(widget.lastMessage, style: TextStyle(
+                      color: Colors.white,
+                    ),),
+                    SizedBox(height: 10),
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );

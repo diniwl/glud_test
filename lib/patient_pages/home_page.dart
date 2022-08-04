@@ -11,10 +11,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:fluttericon/octicons_icons.dart';
 import 'package:intl/intl.dart';
 
-String formatDate(DateTime d) {
-  return d.toString().substring(0, 19);
-}
-
 class HomePage extends StatefulWidget {
   final String? payload;
   const HomePage({
@@ -101,8 +97,6 @@ class _HomePageState extends State<HomePage> {
     print(event);
     setState(() {
       _steps = event.steps;
-      _distance = _steps/1312;
-      _calories = _steps*0.04;
     });
   }
 
@@ -154,235 +148,233 @@ class _HomePageState extends State<HomePage> {
               fontSize: 20,
             )),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
 
-            Text(
-              formattedDate,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-              ),
+          Text(
+            formattedDate,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
             ),
+          ),
 
-            SizedBox(
-              height: 30,
-            ),
+          SizedBox(
+            height: 30,
+          ),
 
-            //glucometer
-            Center(
-              child: CircularPercentIndicator(
-                radius: 110,
-                lineWidth: 13,
-                animation: true,
-                percent: double.parse(_displayText) * 0.0025,
-                center: Column(
-                  children: [
-                    SizedBox(height: 70),
-                    Text(
-                      _displayText.substring(0, 5),
+          //glucometer
+          Center(
+            child: CircularPercentIndicator(
+              radius: 110,
+              lineWidth: 13,
+              animation: true,
+              percent: double.parse(_displayText) * 0.0025,
+              center: Column(
+                children: [
+                  SizedBox(height: 70),
+                  Text(
+                    _displayText,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text('mg/dL',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.w400,
+                      ))
+                ],
+              ),
+              circularStrokeCap: CircularStrokeCap.round,
+              backgroundColor: Color(0xff556D9D),
+              linearGradient: LinearGradient(colors: [
+                Color(0xfffff6c0),
+                Color(0xfffeba00),
+                Colors.redAccent,
+              ]),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+
+          //pedometer
+          Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30)),
+            elevation: 5,
+            child: ClipPath(
+              clipper: ShapeBorderClipper(
+                  shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              )),
+              child: Container(
+                height: 75,
+                width: 350,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Color(0xff6A7DA1),
+                  Color(0xff556D9D),
+                  Color(0xff334974),
+                ])),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Icon(
+                      Icons.directions_walk_rounded,
+                      size: 20,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      _steps.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Text('mg/dL',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w400,
-                        ))
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Icon(
+                      Icons.add_road_rounded,
+                      size: 20,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(_distance.toStringAsFixed(1) +
+                      ' Km', 
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Icon(Octicons.flame, size: 20),
+                    SizedBox(width: 10),
+                    Text(_calories.toStringAsFixed(1) +
+                      ' Cal',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    )
                   ],
                 ),
-                circularStrokeCap: CircularStrokeCap.round,
-                backgroundColor: Color(0xff556D9D),
-                linearGradient: LinearGradient(colors: [
-                  Color(0xfffff6c0),
-                  Color(0xfffeba00),
-                  Colors.redAccent,
-                ]),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+          ),
 
-            //pedometer
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              elevation: 5,
-              child: ClipPath(
-                clipper: ShapeBorderClipper(
-                    shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                )),
-                child: Container(
-                  height: 75,
-                  width: 350,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    Color(0xff6A7DA1),
-                    Color(0xff556D9D),
-                    Color(0xff334974),
-                  ])),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Icon(
-                        Icons.directions_walk_rounded,
-                        size: 20,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        _steps.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Icon(
-                        Icons.add_road_rounded,
-                        size: 20,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(_distance.toStringAsFixed(1) +
-                        ' Km', 
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Icon(Octicons.flame, size: 20),
-                      SizedBox(width: 10),
-                      Text(_calories.toStringAsFixed(1) +
-                        ' Cal',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          SizedBox(
+            height: 20,
+          ),
 
-            SizedBox(
-              height: 20,
+          //insulin reminder
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
-
-            //insulin reminder
-            Card(
-              shape: RoundedRectangleBorder(
+            elevation: 5,
+            child: ClipPath(
+              clipper: ShapeBorderClipper(
+                  shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
-              ),
-              elevation: 5,
-              child: ClipPath(
-                clipper: ShapeBorderClipper(
-                    shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                )),
-                child: Container(
-                  height: 100,
-                  width: 350,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    Color(0xff6A7DA1),
-                    Color(0xff556D9D),
-                    Color(0xff334974)
-                  ])),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        Icons.medication_rounded,
-                        size: 40,
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
+              )),
+              child: Container(
+                height: 100,
+                width: 350,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Color(0xff6A7DA1),
+                  Color(0xff556D9D),
+                  Color(0xff334974)
+                ])),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      Icons.medication_rounded,
+                      size: 40,
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Insulin',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
                           ),
-                          Text(
-                            'Insulin',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
+                        ),
+                        SizedBox(
+                          height: 23,
+                        ),
+                        Text(
+                          _displayCount,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
                           ),
-                          SizedBox(
-                            height: 23,
-                          ),
-                          Text(
-                            _displayCount,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          //yang belom
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  notifClick = !notifClick;
-                                });
-                              },
-                              icon: Icon((notifClick == false)?
-                                Icons.notifications_active_rounded : Icons.notifications_off_rounded,
-                              )),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        //yang belom
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                notifClick = !notifClick;
+                              });
+                            },
+                            icon: Icon((notifClick == false)?
+                              Icons.notifications_active_rounded : Icons.notifications_off_rounded,
+                            )),
 
-                          IconButton(
-                              onPressed: () async {
-                                try {
-                                  await insulinRef
-                                      .update({'insulin': _counter++});
-                                  SharedPreferences pref =
-                                      await SharedPreferences.getInstance();
-                                  print('The insulin value has been updated');
-                                } catch (e) {
-                                  print('Insulin intake error $e');
-                                }
-                              },
-                              icon: Icon(
-                                Icons.plus_one_rounded,
-                              ))
-                        ],
-                      )
-                    ],
-                  ),
+                        IconButton(
+                            onPressed: () async {
+                              try {
+                                await insulinRef
+                                    .update({'insulin': _counter++});
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
+                                print('The insulin value has been updated');
+                              } catch (e) {
+                                print('Insulin intake error $e');
+                              }
+                            },
+                            icon: Icon(
+                              Icons.plus_one_rounded,
+                            ))
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
