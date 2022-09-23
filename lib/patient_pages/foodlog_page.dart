@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glud_test/patient_pages/food_list.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -52,9 +53,9 @@ class _FoodLogState extends State<FoodLog> {
                   )
                 ],
                 palette: <Color>[
-                  Color(0xff4D77FF),
-                  Color(0xff00D7FF),
-                  Color(0xff0096FF)
+                  Color(0xffFDB777),
+                  Color(0xffFD7F2C),
+                  Color(0xffFD9346)
                 ],
                 title: ChartTitle(
                   text: 'Calories Tracked\n\n' + formattedDate,
@@ -97,38 +98,45 @@ class _FoodLogState extends State<FoodLog> {
               child: ListView(
                 children: [
                   Card(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xff6A7DA1),
-                          Color(0xff556D9D),
-                          Color(0xff334974),
-                        ]
-                        )
-                      ),
-                      height: 75,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              Text('Breakfast',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),),
-                              Text('Nasi, Telur dadar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),),
-                            ],
-                          ),
-                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
-                        ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => FoodList()
+                        )));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            Color(0xff6A7DA1),
+                            Color(0xff556D9D),
+                            Color(0xff334974),
+                          ]
+                          )
+                        ),
+                        height: 75,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 15),
+                                Text('Breakfast',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),),
+                                Text('Nasi, Telur dadar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),),
+                              ],
+                            ),
+                            Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
+                          ],
+                        ),
                       ),
                     ),
                   ),

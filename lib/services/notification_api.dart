@@ -1,81 +1,67 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:rxdart/subjects.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class NotificationApi {
-  static final _notifications = FlutterLocalNotificationsPlugin();
-  static final onNotifications = BehaviorSubject<String?>();
+class LocalNotificationService {
+  LocalNotificationService();
 
-  static Future _notificationDetails() async {
-    return NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channel id', 
-        'channel name',
-        importance: Importance.max,
-        ),
-      iOS: IOSNotificationDetails(), 
-    );
-  }
+  final _localNotificationService = FlutterLocalNotificationsPlugin();
 
-  static Future init({bool initScheduled = false}) async {
-    final android = AndroidInitializationSettings('@mipmap/ic_laucher');
-    final iOS = IOSInitializationSettings();
-    final settings = InitializationSettings(android: android, iOS: iOS);
-    await _notifications.initialize(
-      settings,
-      onSelectNotification: (payload) async {
-        onNotifications.add(payload);
-      },
-    );
-  }
-
-  static Future showNotification({
-    int id = 0,
-    String? title,
-    String? body,
-    String? payload,
-  }) async =>
-  _notifications.show(
-    id, 
-    title, 
-    body, 
-    await _notificationDetails (),
-    payload: payload,
+  Future<void> initialize() async {
+    const AndroidInitializationSettings androidInitializationSettings = 
+    AndroidInitializationSettings('icon'
     );
 
-  static void showScheduledNotification({
-    int id = 0,
-    String? title,
-    String? body,
-    String? payload,
-    required DateTime scheduledDate,
-  }) async =>
-  _notifications.zonedSchedule(
-    id, 
-    title, 
-    body, 
-    _scheduleDaily(Time(8)),
-    await _notificationDetails (),
-    payload: payload,
-    androidAllowWhileIdle: true,
-    uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-    matchDateTimeComponents: DateTimeComponents.time,
+    IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification: _onDidReceiveLocalNotification
     );
+
+    final InitializationSettings settings = InitializationSettings(
+      android: androidInitializationSettings, 
+      iOS: iosInitializationSettings);
+
+      await _localNotificationService.initialize(settings, 
+      onSelectNotification: onSelectNotification);
   
-  static tz.TZDateTime _scheduleDaily(Time time) {
-    final now = tz.TZDateTime.now(tz.local);
-    final scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      time.hour,
-      time.minute,
-      time.second
+  }
+
+  Future<NotificationDetails> _notificationDetails() async {
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      'channel_id', 
+      'channel_name',
+      channelDescription: 'description',
+      importance: Importance.max,
+      priority: Priority.max,
+      playSound: true
+      );
+    
+    const IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+
+    return const NotificationDetails(
+      android: androidNotificationDetails,
+    iOS: iosNotificationDetails,
     );
-    return scheduledDate.isBefore(now)
-    ? scheduledDate.add(Duration(days: 1))
-    : scheduledDate;
+  }
+
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    final details = await _notificationDetails();
+    await _localNotificationService.show(id, title, body, details);
+  }
+
+  void _onDidReceiveLocalNotification(int id, String? title, String? body, String? payload) {
+    print('id $id');
+  }
+
+  void onSelectNotification(String? payload) {
+    print('payload $payload');
   }
 }
+

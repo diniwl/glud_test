@@ -18,20 +18,6 @@ class GludTest extends StatefulWidget {
 }
 
 class _GludTestState extends State<GludTest> {
-  void initState() {
-    super.initState();
-    //flutter notif
-    NotificationApi.init();
-    listenNotifications();
-  }
-  
-  void listenNotifications() => NotificationApi.onNotifications.stream.listen(onClickedNotification);
-
-  void onClickedNotification(String? payload) => 
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomePage(payload: payload),
-        ));
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

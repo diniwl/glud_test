@@ -1,0 +1,30 @@
+[
+    {
+        "day": "Mon",
+        "readings" : 220
+    },
+    {
+        "day": "Tue",
+        "readings" : 120
+    },
+    {
+        "day": "Wed",
+        "readings" : 88
+    },
+    {
+        "day": "Thur",
+        "readings" : 89
+    },
+    {
+        "day": "Fri",
+        "readings" : 77
+    },
+    {
+        "day": "Sat",
+        "readings" : 60
+    },
+    {
+        "day": "Sun",
+        "readings" : 100
+    }
+]

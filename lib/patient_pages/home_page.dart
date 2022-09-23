@@ -24,6 +24,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  //notification
+  late final LocalNotificationService service;
+
   //current date
   String formattedDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
 
@@ -62,6 +65,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void initState() {
+    service = LocalNotificationService();
+    service.initialize();
     //fetching user fullname
     super.initState();
     FirebaseFirestore.instance
@@ -134,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   'Log out',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     color: Colors.white,
                   ),
                 ),
@@ -145,7 +150,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Hello, ${loggedInUser.fullName}",
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 25,
             )),
       ),
       body: Column(
@@ -158,7 +163,7 @@ class _HomePageState extends State<HomePage> {
           Text(
             formattedDate,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 25,
               color: Colors.white,
             ),
           ),
@@ -170,25 +175,25 @@ class _HomePageState extends State<HomePage> {
           //glucometer
           Center(
             child: CircularPercentIndicator(
-              radius: 110,
-              lineWidth: 13,
+              radius: 150,
+              lineWidth:15,
               animation: true,
               percent: double.parse(_displayText) * 0.0025,
               center: Column(
                 children: [
-                  SizedBox(height: 70),
+                  SizedBox(height: 85),
                   Text(
                     _displayText,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 35,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   Text('mg/dL',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
+                        fontSize: 35,
                         fontWeight: FontWeight.w400,
                       ))
                 ],
@@ -203,7 +208,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 40,
           ),
 
           //pedometer
@@ -232,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Icon(
                       Icons.directions_walk_rounded,
-                      size: 20,
+                      size: 25,
                     ),
                     SizedBox(
                       width: 20,
@@ -250,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Icon(
                       Icons.add_road_rounded,
-                      size: 20,
+                      size: 25,
                     ),
                     SizedBox(
                       width: 10,
@@ -266,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: 20,
                     ),
-                    Icon(Octicons.flame, size: 20),
+                    Icon(Octicons.flame, size: 25),
                     SizedBox(width: 10),
                     Text(_calories.toStringAsFixed(1) +
                       ' Cal',
@@ -283,7 +288,7 @@ class _HomePageState extends State<HomePage> {
           ),
 
           SizedBox(
-            height: 20,
+            height: 30,
           ),
 
           //insulin reminder
@@ -298,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(30),
               )),
               child: Container(
-                height: 100,
+                height: 110,
                 width: 350,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
@@ -316,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       children: [
                         SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Text(
                           'Insulin',
@@ -343,7 +348,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         //yang belom
                         IconButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              await service.showNotification(
+                                id: 0, 
+                                title: 'title', 
+                                body: 'body');
                               setState(() {
                                 notifClick = !notifClick;
                               });
@@ -365,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                               }
                             },
                             icon: Icon(
-                              Icons.plus_one_rounded,
+                              Icons.plus_one_rounded, 
                             ))
                       ],
                     )
