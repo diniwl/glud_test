@@ -121,11 +121,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    
     final insulinRef = _database.child('insulin');
-    return Scaffold(
-      backgroundColor: Color(0xff273248),
-      appBar: AppBar(
+    final appBar =  AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   'Log out',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     color: Colors.white,
                   ),
                 ),
@@ -150,9 +150,12 @@ class _HomePageState extends State<HomePage> {
         title: Text("Hello, ${loggedInUser.fullName}",
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 20,
             )),
-      ),
+      );
+    return Scaffold(
+      backgroundColor: Color(0xff273248),
+      appBar: appBar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -163,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           Text(
             formattedDate,
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 23,
               color: Colors.white,
             ),
           ),
@@ -176,12 +179,12 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: CircularPercentIndicator(
               radius: 150,
-              lineWidth:15,
+              lineWidth:18,
               animation: true,
               percent: double.parse(_displayText) * 0.0025,
               center: Column(
                 children: [
-                  SizedBox(height: 85),
+                  SizedBox(height: 95),
                   Text(
                     _displayText,
                     style: TextStyle(
@@ -210,6 +213,8 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 40,
           ),
+
+          //save data button
 
           //pedometer
           Card(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glud_test/models/food_model.dart';
 import 'package:glud_test/patient_pages/food_list.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -12,7 +13,7 @@ class FoodLog extends StatefulWidget {
 class _FoodLogState extends State<FoodLog> {
   late List<CalData> _chartData;
   late TooltipBehavior _tooltipBehavior;
-  final List<String> mealTime = <String> ['Breakfast', 'Lunch', 'Dinner'];
+  final List<String> mealTime = <String>['Breakfast', 'Lunch', 'Dinner'];
 
   @override
   void initState() {
@@ -41,16 +42,17 @@ class _FoodLogState extends State<FoodLog> {
               child: SfCircularChart(
                 annotations: [
                   CircularChartAnnotation(
-                    widget: Container(
-                      child: Text('1200\nCal', 
+                      widget: Container(
+                    child: Text(
+                      '1200\nCal',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                      ),),
-                    )
-                  )
+                      ),
+                    ),
+                  ))
                 ],
                 palette: <Color>[
                   Color(0xffFDB777),
@@ -95,130 +97,144 @@ class _FoodLogState extends State<FoodLog> {
           Expanded(
             child: Container(
               height: 150,
-              child: ListView(
-                children: [
-                  Card(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => FoodList()
-                        )));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
+              child: ListView(children: [
+                Card(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => FoodList())));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
                           gradient: LinearGradient(colors: [
-                            Color(0xff6A7DA1),
-                            Color(0xff556D9D),
-                            Color(0xff334974),
-                          ]
-                          )
-                        ),
-                        height: 75,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 15),
-                                Text('Breakfast',
+                        Color(0xff6A7DA1),
+                        Color(0xff556D9D),
+                        Color(0xff334974),
+                      ])),
+                      height: 75,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+                              Text(
+                                'Breakfast',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                ),),
-                                Text('Nasi, Telur dadar',
+                                ),
+                              ),
+                              Text(
+                                'Nasi, Telur dadar',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
-                                ),),
-                              ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Icon(
+                            Icons.navigate_next_rounded,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  child: Container(
+                    height: 75,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                      Color(0xff6A7DA1),
+                      Color(0xff556D9D),
+                      Color(0xff334974),
+                    ])),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 15),
+                            Text(
+                              'Lunch',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                            Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
+                            Text(
+                              'Nasi, Opor ayam',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-                  Card(
-                    child: Container(
-                      height: 75,
-                      decoration: BoxDecoration(
+                ),
+                Card(
+                  child: Container(
+                    height: 75,
+                    decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
-                          Color(0xff6A7DA1),
-                          Color(0xff556D9D),
-                          Color(0xff334974),
-                        ]
-                        )
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              Text('Lunch',
+                      Color(0xff6A7DA1),
+                      Color(0xff556D9D),
+                      Color(0xff334974),
+                    ])),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 15),
+                            Text(
+                              'Dinner',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                              ),),
-                              Text('Nasi, Opor ayam',
+                              ),
+                            ),
+                            Text(
+                              'Nasi, Sayur sop',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
-                              ),),
-                            ],
-                          ),
-                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
-                        ],
-                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-                  Card(
-                    child: Container(
-                      height: 75,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xff6A7DA1),
-                          Color(0xff556D9D),
-                          Color(0xff334974),
-                        ]
-                        )
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              Text('Dinner',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),),
-                              Text('Nasi, Sayur sop',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),),
-                            ],
-                          ),
-                          Icon(Icons.navigate_next_rounded, size: 30, color: Colors.white,),
-                        ],
-                      ),
-                    ),
-                  ),
-                ]
-              ),
+                ),
+              ]),
             ),
           )
         ],
-      )
-      ),
+      )),
     );
   }
 

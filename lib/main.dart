@@ -28,7 +28,7 @@ class _GludTestState extends State<GludTest> {
         accentColor: Color(0xffFFA364),
         fontFamily: 'SpaceGrotesk',
       ),
-      home: BottomNavi(),
+      home: LoginPage(),
     );
   }
 }

@@ -70,7 +70,7 @@ class _ConsultPageState extends State<ConsultPage> {
               )),
               child: Container(
                 padding: EdgeInsets.only(left: 15),
-                height: 50,
+                height: 55,
                 width: 350,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
