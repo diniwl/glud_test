@@ -150,6 +150,7 @@ class FoodList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff273248),
       body: ListView.builder(
         padding: const EdgeInsets.all(10),
         itemCount: loadedFood.length,
