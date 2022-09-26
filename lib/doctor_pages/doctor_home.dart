@@ -104,7 +104,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DoctorReport()));
+                            builder: (context) => ChartPage()));
                         },
                         child: Card(
                           shape: RoundedRectangleBorder(
