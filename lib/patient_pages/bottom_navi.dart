@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glud_test/patient_pages/consult_page.dart';
-import 'package:glud_test/patient_pages/foodlog_page.dart';
 import 'package:glud_test/patient_pages/home_page.dart';
 import 'package:glud_test/patient_pages/report_page.dart';
+import '../screens/products_overview_screen.dart';
 import 'chart_page.dart';
 import 'home_page.dart';
 import 'consult_page.dart';
-import 'foodlog_page.dart';
 
 class BottomNavi extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _BottomNaviState extends State<BottomNavi> {
       payload: '',
     ),
     ChartPage(),
-    FoodLog(),
+    ProductsOverviewScreen(),
     ConsultPage(),
   ];
 

@@ -7,7 +7,6 @@ class Food {
   final double proteins;
   final double fats;
   final double calories;
-  bool isSelected;
 
   Food({
     required this.id, 
@@ -16,6 +15,5 @@ class Food {
     required this.proteins, 
     required this.fats, 
     required this.calories,
-    this.isSelected = false,
     });
 }
